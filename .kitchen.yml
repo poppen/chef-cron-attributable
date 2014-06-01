@@ -1,0 +1,27 @@
+---
+driver:
+  name: docker
+  socket: <%= ENV['DOCKER_HOST'] %>
+  dns: 8.8.8.8
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+    driver_config:
+      image: okapies/chef-solo
+      platform: ubuntu
+      require_chef_omnibus: false
+
+suites:
+  - name: default
+    run_list:
+      - recipe[cron-attributable]
+    attributes:
+      cron_d:
+        daily-usage-report:
+          minute: 0
+          hour: 23
+          command: /srv/app/scripts/daily_report
+          user: appuser
